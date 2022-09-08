@@ -18,3 +18,7 @@ The project should be located in a folder something like:
 > C:\Users\\{username}\Documents\Powershell\Microsoft.PowerShell_profile.ps1
 
 `. $PSScriptRoot\CustomProfile\Load-Profile.ps1`
+
+## Issues
+> If you encounter and issue relating to the `Set-PSReadLineOption` commands, this is probably due to the version of your PSReadLine module and it needs to be upgraded.  I'm not doing this automatically in the script.  Follow instructions here: [Upgrading PSReadLine](https://github.com/PowerShell/PSReadLine#upgrading)
+
