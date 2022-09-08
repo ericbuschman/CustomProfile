@@ -1,5 +1,5 @@
 # Import the Posh-git prompt module and set default theme
-Import-Module -Name Posh-git
+Invoke-ImportInstallModule -Name Posh-git
 $GLOBAL:GitPromptSettings.DefaultPromptWriteStatusFirst = $true
 $GLOBAL:GitPromptSettings.DefaultPromptPrefix.ForegroundColor = [System.ConsoleColor]::Red
 $GLOBAL:GitPromptSettings.DefaultPromptBeforeSuffix.ForegroundColor = [ConsoleColor]::Green

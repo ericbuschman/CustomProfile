@@ -1,6 +1,9 @@
 # Autorun all startup scripts
 Set-Location "$PSScriptRoot"
 
+#Set TLS 1.2
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+
 # Monitor startup time by import/function
 [hashtable]$monitorScriptStartupTime = @{}
 

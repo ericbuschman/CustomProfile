@@ -1,2 +1,2 @@
 #Import pretty icons into powershell
-Import-Module -Name Terminal-Icons
+Invoke-ImportInstallModule -Name Terminal-Icons

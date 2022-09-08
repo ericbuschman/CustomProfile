@@ -1,2 +1,2 @@
 # Easy directory switcher
-Import-Module -Name Z
+Invoke-ImportInstallModule -Name Z
