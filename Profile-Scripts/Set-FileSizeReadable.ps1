@@ -1,3 +1,8 @@
+# I find the default file size implementation in the prompt
+# difficult to parse.  This file implements a simple FileSize
+# column in Get-ChildItem which shows the size in human readable
+# format.  Original source unknown.
+
 #Specify full file names for the new format styles
 $mytypes="$(split-path $profile)\MyTypes.ps1xml"
 $myformat="$(split-path $profile)\MyFileFormat.format.ps1xml"
