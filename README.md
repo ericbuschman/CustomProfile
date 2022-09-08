@@ -1,6 +1,20 @@
 # MyProfile
 A powershell profile with icons and quality of life basics
 
+
+## Features
+
+### Modules
+- Posh-Git (customized prompt) [Link](https://github.com/dahlbyk/posh-git)
+- Terminal-Icons [Link](https://github.com/devblackops/Terminal-Icons)
+- Z [Link](https://github.com/badmotorfinger/z)
+
+### Functions
+- `x` - Simple alias for the `exit` command
+- `Get-Path` - Pulls the environment path variable and provides a sorted list of paths
+- `ver` - Gets the version of powershell
+- `touch` - Updates the timestamp of a file
+
 ## Requirements
 You should have a nerd font for the Terminal-Icons module to work properly, you can find instructions on how to install the font here: [Comments on how to get Terminal Icons font working](https://gist.github.com/markwragg/6301bfcd56ce86c3de2bd7e2f09a8839?permalink_comment_id=3528810#gistcomment-3528810)
 
