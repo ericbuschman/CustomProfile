@@ -3,7 +3,7 @@
 #Change directory to the script folder
 Set-Location "$PSScriptRoot"
 
-# Load helpful import module function to install if not installed
+# Load helpful import module function to install modules if not installed
 . $PSScriptRoot\Utilities\Function-ImportInstallModule.ps1
 
 #Set TLS 1.2

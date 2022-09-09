@@ -39,7 +39,10 @@ if (-not (Test-Path $mytypes)) {
 }
 
 if (-not (Test-Path $myformat)) {
-    '<?xml version="1.0" encoding="utf-8" ?> 
+    '<?xml version="1.0" encoding="utf-8" ?>
+
+    <!-- Based on the format.ps1xml file from DirColors
+    https://github.com/DHowett/DirColors -->
     <Configuration>
         <SelectionSets>
             <SelectionSet>
@@ -51,63 +54,62 @@ if (-not (Test-Path $myformat)) {
             </SelectionSet>
         </SelectionSets>
     
-        <!-- ################ GLOBAL CONTROL DEFINITIONS ################ -->
         <Controls>
             <Control>
                 <Name>FileSystemTypes-GroupingFormat</Name>
-                        <CustomControl>
-                            <CustomEntries>
-                                <CustomEntry>
+                <CustomControl>
+                    <CustomEntries>
+                        <CustomEntry>
+                            <CustomItem>
+                                <Frame>
+                                    <LeftIndent>4</LeftIndent>
                                     <CustomItem>
-                                        <Frame>
-                                            <LeftIndent>4</LeftIndent>
-                                            <CustomItem>
-                                                <Text AssemblyName="System.Management.Automation" BaseName="FileSystemProviderStrings" ResourceId="DirectoryDisplayGrouping"/>
-                                                <ExpressionBinding>
-                                                  <ScriptBlock>
-                                                      $_.PSParentPath.Replace("Microsoft.PowerShell.Core\FileSystem::", "")                                                  
-                                                  </ScriptBlock>
-                                                </ExpressionBinding>
-                                                <NewLine/>
-                                            </CustomItem> 
-                                        </Frame>
+                                        <Text AssemblyName="System.Management.Automation" BaseName="FileSystemProviderStrings" ResourceId="DirectoryDisplayGrouping"/>
+                                        <ExpressionBinding>
+                                            <ScriptBlock>
+                                                      $_.PSParentPath.Replace("Microsoft.PowerShell.Core\FileSystem::", "")
+                                            </ScriptBlock>
+                                        </ExpressionBinding>
+                                        <NewLine/>
                                     </CustomItem>
-                                </CustomEntry>
-                            </CustomEntries>
+                                </Frame>
+                            </CustomItem>
+                        </CustomEntry>
+                    </CustomEntries>
                 </CustomControl>
             </Control>
         </Controls>
     
-        <!-- ################ VIEW DEFINITIONS ################ -->
-    
         <ViewDefinitions>
-           <View>
+            <View>
                 <Name>children</Name>
                 <ViewSelectedBy>
                     <SelectionSetName>FileSystemTypes</SelectionSetName>
                 </ViewSelectedBy>
                 <GroupBy>
-                    <PropertyName>PSParentPath</PropertyName> 
-                    <CustomControlName>FileSystemTypes-GroupingFormat</CustomControlName>  
+                    <PropertyName>PSParentPath</PropertyName>
+                    <CustomControlName>FileSystemTypes-GroupingFormat</CustomControlName>
                 </GroupBy>
                 <TableControl>
                     <TableHeaders>
-                       <TableColumnHeader>
-                          <Label>Mode</Label>
-                          <Width>7</Width>
-                          <Alignment>left</Alignment>
-                       </TableColumnHeader>
+                        <TableColumnHeader>
+                            <Label>Mode</Label>
+                            <Width>7</Width>
+                            <Alignment>left</Alignment>
+                        </TableColumnHeader>
                         <TableColumnHeader>
                             <Label>LastWriteTime</Label>
                             <Width>25</Width>
                             <Alignment>right</Alignment>
                         </TableColumnHeader>
                         <TableColumnHeader>
-                            <Label>FileSize</Label>
+                                <Label>FileSize</Label>
                             <Width>14</Width>
                             <Alignment>right</Alignment>
                         </TableColumnHeader>
-                        <TableColumnHeader/>
+                        <TableColumnHeader>
+                            <Label>Name</Label>
+                        </TableColumnHeader>
                     </TableHeaders>
                     <TableRowEntries>
                         <TableRowEntry>
@@ -122,10 +124,12 @@ if (-not (Test-Path $myformat)) {
                                     </ScriptBlock>
                                 </TableColumnItem>
                                 <TableColumnItem>
-                                <PropertyName>FileSize</PropertyName>
+                                        <PropertyName>FileSize</PropertyName>
                                 </TableColumnItem>
                                 <TableColumnItem>
-                                    <PropertyName>Name</PropertyName>
+                                    <ScriptBlock>
+                                        Terminal-Icons\Format-TerminalIcons $_
+                                    </ScriptBlock>
                                 </TableColumnItem>
                             </TableColumnItems>
                         </TableRowEntry>
@@ -138,8 +142,8 @@ if (-not (Test-Path $myformat)) {
                     <SelectionSetName>FileSystemTypes</SelectionSetName>
                 </ViewSelectedBy>
                 <GroupBy>
-                    <PropertyName>PSParentPath</PropertyName> 
-                    <CustomControlName>FileSystemTypes-GroupingFormat</CustomControlName>  
+                    <PropertyName>PSParentPath</PropertyName>
+                    <CustomControlName>FileSystemTypes-GroupingFormat</CustomControlName>
                 </GroupBy>
                 <ListControl>
                     <ListEntries>
@@ -149,12 +153,15 @@ if (-not (Test-Path $myformat)) {
                             </EntrySelectedBy>
                             <ListItems>
                                 <ListItem>
-                                    <PropertyName>Name</PropertyName>
+                                    <Label>Name</Label>
+                                    <ScriptBlock>
+                                        Terminal-Icons\Format-TerminalIcons $_
+                                    </ScriptBlock>
                                 </ListItem>
                                 <ListItem>
-                                    <PropertyName>FileSize</PropertyName>
+                                        <PropertyName>FileSize</PropertyName>
                                 </ListItem>
-                               <ListItem>
+                                <ListItem>
                                     <PropertyName>CreationTime</PropertyName>
                                 </ListItem>
                                 <ListItem>
@@ -170,17 +177,23 @@ if (-not (Test-Path $myformat)) {
                                     <PropertyName>LinkType</PropertyName>
                                 </ListItem>
                                 <ListItem>
-                                    <PropertyName>Target</PropertyName>
-                                </ListItem>                        
-                                <ListItem>
-                                    <PropertyName>VersionInfo</PropertyName>
+                                    <Label>Target</Label>
+                                    <ScriptBlock>
+                                        Terminal-Icons\Format-TerminalIcons $_
+                                    </ScriptBlock>
                                 </ListItem>
+                                <!-- <ListItem>
+                                    <PropertyName>VersionInfo</PropertyName>
+                                </ListItem> -->
                             </ListItems>
                         </ListEntry>
                         <ListEntry>
                             <ListItems>
                                 <ListItem>
-                                    <PropertyName>Name</PropertyName>
+                                    <Label>Name</Label>
+                                    <ScriptBlock>
+                                        Terminal-Icons\Format-TerminalIcons $_
+                                    </ScriptBlock>
                                 </ListItem>
                                 <ListItem>
                                     <PropertyName>CreationTime</PropertyName>
@@ -191,15 +204,18 @@ if (-not (Test-Path $myformat)) {
                                 <ListItem>
                                     <PropertyName>LastAccessTime</PropertyName>
                                 </ListItem>
-                              <ListItem>
-                                <PropertyName>Mode</PropertyName>
-                              </ListItem>
-                              <ListItem>
-                                <PropertyName>LinkType</PropertyName>
-                              </ListItem>
-                              <ListItem>
-                                <PropertyName>Target</PropertyName>
-                              </ListItem>
+                                <ListItem>
+                                    <PropertyName>Mode</PropertyName>
+                                </ListItem>
+                                <ListItem>
+                                    <PropertyName>LinkType</PropertyName>
+                                </ListItem>
+                                <ListItem>
+                                    <Label>Target</Label>
+                                    <ScriptBlock>
+                                    Terminal-Icons\Format-TerminalIcons $_
+                                    </ScriptBlock>
+                                </ListItem>
                             </ListItems>
                         </ListEntry>
                     </ListEntries>
@@ -211,14 +227,16 @@ if (-not (Test-Path $myformat)) {
                     <SelectionSetName>FileSystemTypes</SelectionSetName>
                 </ViewSelectedBy>
                 <GroupBy>
-                    <PropertyName>PSParentPath</PropertyName> 
-                    <CustomControlName>FileSystemTypes-GroupingFormat</CustomControlName>  
+                    <PropertyName>PSParentPath</PropertyName>
+                    <CustomControlName>FileSystemTypes-GroupingFormat</CustomControlName>
                 </GroupBy>
                 <WideControl>
                     <WideEntries>
                         <WideEntry>
                             <WideItem>
-                                <PropertyName>Name</PropertyName>
+                                <ScriptBlock>
+                                    Terminal-Icons\Format-TerminalIcons $_
+                                </ScriptBlock>
                             </WideItem>
                         </WideEntry>
                         <WideEntry>
@@ -226,88 +244,17 @@ if (-not (Test-Path $myformat)) {
                                 <TypeName>System.IO.DirectoryInfo</TypeName>
                             </EntrySelectedBy>
                             <WideItem>
-                                <PropertyName>Name</PropertyName>
-                                <FormatString>[{0}]</FormatString>
+                                <ScriptBlock>
+                                    Terminal-Icons\Format-TerminalIcons $_
+                                </ScriptBlock>
                             </WideItem>
                         </WideEntry>
                     </WideEntries>
                 </WideControl>
             </View>
-            <View>
-                <Name>FileSecurityTable</Name>
-                <ViewSelectedBy>
-                    <TypeName>System.Security.AccessControl.FileSystemSecurity</TypeName>
-                </ViewSelectedBy>
-                <GroupBy>
-                    <PropertyName>PSParentPath</PropertyName> 
-                    <CustomControlName>FileSystemTypes-GroupingFormat</CustomControlName>  
-                </GroupBy>
-                <TableControl>
-                    <TableHeaders>
-                       <TableColumnHeader>
-                          <Label>Path</Label>
-                       </TableColumnHeader>
-                       <TableColumnHeader />
-                       <TableColumnHeader>
-                          <Label>Access</Label>
-                       </TableColumnHeader>
-                    </TableHeaders>
-                    <TableRowEntries>
-                        <TableRowEntry>
-                            <TableColumnItems>
-                                <TableColumnItem>
-                                    <ScriptBlock>
-                                        split-path $_.Path -leaf
-                                    </ScriptBlock>
-                                </TableColumnItem>
-                                <TableColumnItem>
-                                <PropertyName>Owner</PropertyName>
-                                </TableColumnItem>
-                                <TableColumnItem>
-                                    <ScriptBlock>
-                                        $_.AccessToString
-                                    </ScriptBlock>
-                                </TableColumnItem>
-                            </TableColumnItems>
-                        </TableRowEntry>
-                    </TableRowEntries>
-                </TableControl>
-            </View>
-           <View>
-                <Name>FileSystemStream</Name>
-                <ViewSelectedBy>
-                    <TypeName>Microsoft.PowerShell.Commands.AlternateStreamData</TypeName>
-                </ViewSelectedBy>
-                <GroupBy>
-                    <PropertyName>Filename</PropertyName> 
-                </GroupBy>
-                <TableControl>
-                    <TableHeaders>
-                       <TableColumnHeader>
-                          <Width>20</Width>
-                          <Alignment>left</Alignment>
-                       </TableColumnHeader>
-                        <TableColumnHeader>
-                            <Width>10</Width>
-                            <Alignment>right</Alignment>
-                        </TableColumnHeader>
-                    </TableHeaders>
-                    <TableRowEntries>
-                        <TableRowEntry>
-                            <TableColumnItems>
-                                <TableColumnItem>
-                                    <PropertyName>Stream</PropertyName>
-                                </TableColumnItem>
-                                <TableColumnItem>
-                                    <PropertyName>Length</PropertyName>
-                                </TableColumnItem>
-                            </TableColumnItems>
-                        </TableRowEntry>
-                    </TableRowEntries>
-                </TableControl>
-            </View>          
         </ViewDefinitions>
-    </Configuration>' > $myformat
+    </Configuration>
+    ' > $myformat
 }
 
 Update-TypeData -PrependPath $mytypes
