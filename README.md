@@ -1,7 +1,7 @@
 # CustomProfile
 A powershell profile with icons and quality of life basics
 
-Here is an example of how the visual changes this profile applies:
+Here is an example of the visual changes this profile applies:
 ![](./_readme_resources/TerminalProfile.jpg)
 
 ## Features
