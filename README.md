@@ -2,7 +2,10 @@
 A powershell profile with icons and quality of life basics
 
 Here is an example of the visual changes this profile applies:
-![](./_readme_resources/TerminalProfile.jpg)
+
+>![](./_readme_resources/TerminalProfile.jpg)
+
+
 
 ## Features
 
@@ -16,6 +19,14 @@ Here is an example of the visual changes this profile applies:
 - `Get-Path` - Pulls the environment path variable and provides a sorted list of paths
 - `ver` - Gets the version of powershell
 - `touch` - Updates the timestamp of a file
+
+### Flexibility
+
+One of the features of this custom profile is the flexibility of the loaded modules and functions in your profile.  Due to the nature of looping through files in your Profile-Scripts folder based on the extension `.ps1`, if you change that extension name it will no longer be loaded in the future.  
+
+Let's say you don't ever want to use the simple function `x` to exit your powershell window.  Then you could either delete the file `Function-Exit.ps1` or rename it to `Function-Exit.ps1.disabled`.  The second option leaves you the flexibility of having that available to you in the future.
+
+>![CustomProfile Files 2022-09-09](./_readme_resources/ProfileTree.jpg)
 
 ## Requirements
 You should have a nerd font for the Terminal-Icons module to work properly, you can find instructions on how to install the font here: [Comments on how to get Terminal Icons font working](https://gist.github.com/markwragg/6301bfcd56ce86c3de2bd7e2f09a8839?permalink_comment_id=3528810#gistcomment-3528810)
