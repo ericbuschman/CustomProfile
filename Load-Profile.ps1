@@ -1,10 +1,18 @@
-### Autorun all startup scripts
+<# .SYNOPSIS
+     Load the custom profile environment
+.DESCRIPTION
+     This is the starting point for the CustomProfile project.  It will set some quality of life settings
+     and load all the files in the subfolders of the project.  Please see the readme for more information about
+     configuring the custom profile environment.
+.NOTES
+     Author     : Eric Buschman
+.LINK
+     https://github.com/ericbuschman/CustomProfile
+#>
+
 
 #Change directory to the script folder
 Set-Location "$PSScriptRoot"
-
-# Load helpful import module function to install modules if not installed
-. $PSScriptRoot\Utilities\Function-ImportInstallModule.ps1
 
 #Set TLS 1.2
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
@@ -18,8 +26,8 @@ $title=$host.ui.rawui.WindowTitle
 #Create a timer to monitor script load time
 $timer = [system.diagnostics.stopwatch]::StartNew()
 
-# Loop through all startup scripts in .\Profile-Scripts, filter by *.ps1
-Get-ChildItem ".\Profile-Scripts" -r -i *.ps1 | ForEach-Object { 
+# Loop through all startup scripts filter by *.ps1, order of folders matter.
+Get-ChildItem (".\Utilities",".\Profile-Scripts",".\Configure-Aliases") -Recurse -Include "*.ps1" | ForEach-Object { 
   # Start the timer
   $timer.Restart(); 
 
@@ -40,5 +48,5 @@ $host.ui.rawui.WindowTitle=$title
 $timer = $null;
 Write-Host 'To find out individual script load time: $monitorScriptStartupTime | FT -Auto'
 
-# Preference, I like to have the window start in the powershell folder
+# Preference, I like to have the window start in the powershell profile folder
 Set-Location (Split-Path $profile)
