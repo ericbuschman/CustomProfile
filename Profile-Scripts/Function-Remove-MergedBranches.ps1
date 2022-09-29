@@ -1,4 +1,5 @@
 function Remove-MergedBranches {
+    git fetch origin --prune
     git branch --merged |
     ForEach-Object { $_.Trim() } |
     Where-Object { $_ -NotMatch "^\*" } |
