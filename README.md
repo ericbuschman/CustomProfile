@@ -55,6 +55,7 @@ The project should be located in a folder something like:
 - `Get-Path` - Pulls the environment path variables and sorted readable list of paths
 - `ver` - Gets the version of powershell
 - `touch` - Updates the timestamp of a file
+- `Remove-MergedBranches` - Removes git branches that are merged on both local and remote
 
 ### Utilities
 - `Install-Font` - Based off of the solution provided here: [Github - anthonyeden/FontInstallation.ps1](https://gist.github.com/anthonyeden/0088b07de8951403a643a8485af2709b)
