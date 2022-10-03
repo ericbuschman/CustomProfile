@@ -1,0 +1,1 @@
+Set-Alias -Name nd -Value New-Daily

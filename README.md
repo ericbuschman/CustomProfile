@@ -56,6 +56,7 @@ The project should be located in a folder something like:
 - `ver` - Gets the version of powershell
 - `touch` - Updates the timestamp of a file
 - `Remove-MergedBranches` - Removes git branches that are merged on both local and remote
+- `New-Daily` - Creates a new markdown file with the current date in your documents\Daily Notes folder (note: this will open a VS Code window with today's note)
 
 ### Utilities
 - `Install-Font` - Based off of the solution provided here: [Github - anthonyeden/FontInstallation.ps1](https://gist.github.com/anthonyeden/0088b07de8951403a643a8485af2709b)
@@ -63,6 +64,7 @@ The project should be located in a folder something like:
 
 ### Aliases
 - `g` - Alias for the GIT program
+- `nd` - Alias to run the new Daily Notes function
 
 ## Flexibility
 
