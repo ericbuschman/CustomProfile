@@ -40,7 +40,8 @@ Function New-DailyNote (
         if ($inSection -and $line.startsWith("- [ ]")) {
             $template += $line
         }
-        if ($line.StartsWith("## Work Log")) {
+        # If we get to the next section, stop parsing
+        if ($inSection -and $line.StartsWith("##")) {
             break
         }
     }
@@ -53,7 +54,6 @@ Function New-DailyNote (
 
 ## 0000 Meeting
 - Tags: 
-- Meeting Link: 
 - Attendees: 
 - Tasks:
 - Notes:
@@ -66,6 +66,11 @@ Function New-DailyNote (
     }
 
     $catPreviousFile.replace("{{Next}}", "[Next]($todaysFile)") | Set-Content -Path $previousFile -Force
+
+    # TODO: build out an archival process for old notes
+    # Archiving with updating breadcrumbs
+
+    
 
     Code $todaysFile
 
