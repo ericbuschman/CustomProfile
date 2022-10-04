@@ -13,7 +13,7 @@
     https://github.com/ericbuschman/CustomProfile
 #>
 
-Function New-Daily (
+Function New-DailyNote (
     $notesDirectory = "$([Environment]::GetFolderPath("MyDocuments"))\Daily Notes"
 ) {
     if (-Not (Test-Path -Path $notesDirectory)) { mkdir $notesDirectory }
@@ -21,6 +21,7 @@ Function New-Daily (
 
     $todaysFile = ".\$(Get-Date -f "yyyy-MM-dd").md"
     $previousFile = ".\$(Split-Path ((Get-ChildItem .\*.md -Exclude _template.md | Sort-Object CreationTime)[-1]) -Leaf)"
+    $catPreviousFile = (Get-Content -Path $previousFile)
 
     # Template markdown definition
     $template = "
@@ -29,6 +30,22 @@ Function New-Daily (
 # $(Get-Date)
 
 ## Tasks
+"
+
+    # Let's carry forward the not completed tasks from yesterday
+    foreach ($line in $catPreviousFile) {
+        if ($line.startsWith("## Tasks")) {
+            $inSection = $true
+        }
+        if ($inSection -and $line.startsWith("- [ ]")) {
+            $template += $line
+        }
+        if ($line.StartsWith("## Work Log")) {
+            break
+        }
+    }
+
+    $template += "
 - [ ] 
 
 ## Work Log
@@ -48,7 +65,7 @@ Function New-Daily (
         Set-Content -Path $todaysFile -Value $template
     }
 
-(Get-Content -Path $previousFile).replace("{{Next}}", "[Next]($todaysFile)") | Set-Content -Path $previousFile -Force
+    $catPreviousFile.replace("{{Next}}", "[Next]($todaysFile)") | Set-Content -Path $previousFile -Force
 
     Code $todaysFile
 

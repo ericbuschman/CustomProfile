@@ -1,1 +1,1 @@
-Set-Alias -Name nd -Value New-Daily
+Set-Alias -Name nd -Value New-DailyNote
