@@ -88,8 +88,6 @@ Example:
 - Attendees: 
 - Tasks:
 - Notes:
-
-## Communication Log
 "
 
     if (-Not (Test-Path .\$todaysFile)) {
