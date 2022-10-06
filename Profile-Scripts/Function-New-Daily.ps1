@@ -14,7 +14,7 @@
 #>
 
 Function New-DailyNote (
-    $notesDirectory = "$([Environment]::GetFolderPath("MyDocuments"))\Daily Notes"
+    $notesDirectory = "$([Environment]::GetFolderPath("MyDocuments"))\Notebook\Daily Notes"
 ) {
     ## Helper functions to simplify the text manipulation below
     function Get-CarryOverItems($previousNote) {
