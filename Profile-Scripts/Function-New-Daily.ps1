@@ -16,12 +16,46 @@
 Function New-DailyNote (
     $notesDirectory = "$([Environment]::GetFolderPath("MyDocuments"))\Daily Notes"
 ) {
-    $currentPwd = $PWD
-    if (-Not (Test-Path -Path $notesDirectory)) { mkdir $notesDirectory }
-    Set-Location $notesDirectory
+    ## Helper functions to simplify the text manipulation below
+    function Get-CarryOverItems($previousNote) {
+        # Let's carry forward the not completed tasks from yesterday
+        $returnResults = ""
+        foreach ($line in $previousNote) {
+            if ($line.startsWith("## Tasks")) {
+                $inSection = $true
+                continue
+            }
+            if ($inSection -and $line -match "^- \[ \] \w") {
+                $returnResults += "`r`n" + $line 
+            }
+            # If we get to the next section, stop parsing
+            if ($inSection -and $line.StartsWith("##")) {
+                break
+            }
+        }
+        return $returnResults
+    }
+
+    function Get-RelativePath([string]$sourcePath, [string]$filePath) {
+        if (Test-Path $sourcePath -PathType Leaf) { $sourcePath = Split-Path $sourcePath }
+        Push-Location $sourcePath
+        $relativePath = Resolve-Path $filePath -Relative
+        Pop-Location
+        return $relativePath
+    }
+
+    function Get-FolderIfNotExistsCreate([string]$folder) {
+        if (-Not (Test-Path -Path $folder -PathType Container)) { 
+            $null = mkdir "$folder"; 
+        }    
+        return (get-item $folder).FullName
+    }
+
+    # Create a new notes directory if it doesn't already exist
+    $null = Get-FolderIfNotExistsCreate $notesDirectory
 
     # Write readme file
-    if (-Not (Test-Path -Path .\readme.md)) {
+    if (-Not (Test-Path -Path $notesDirectory\readme.md)) {
         '# Daily notes
 The files are laid out in a year \ month structure to keep the root of the tree from having an overwhelming number of files
 
@@ -32,52 +66,31 @@ Example:
     ├───09
     └───10
 ```
-'  | Set-Content -Path .\readme.md
+'  | Set-Content -Path $notesDirectory\readme.md
     }
 
     # Set up variables
-
-    $todaysPath = ".\$(Get-Date -f "yyyy\\MM")"
-    $previousPath = ".\$((get-date).AddDays(-1).ToString("yyyy\\MM"))"
+    $todaysPath = Get-FolderIfNotExistsCreate "$notesDirectory\$(Get-Date -f "yyyy\\MM")"
+    $previousPath = Get-FolderIfNotExistsCreate "$notesDirectory\$((get-date).AddDays(-1).ToString("yyyy\\MM"))"
 
     $todaysFile = "$(Get-Date -f "yyyy-MM-dd").md"
 
-    Push-Location $previousPath
+    if (Test-Path $todaysPath\$todaysFile) { return "Today's Note already exists" }
 
-    $previousFile = "$(((Get-ChildItem .\*.md -Exclude _template.md | Sort-Object CreationTime)[-1]).FullName)"
-    $catPreviousFile = (Get-Content -Path $previousFile)
+    # Set the previous file to last/oldest [-1] returned file from $previousPath
+    $previousFile = "$(((Get-ChildItem $previousPath\*.md -Exclude _template.md | Sort-Object CreationTime)[-1]).FullName)"
 
-    Pop-Location
-
-    Push-Location $todaysPath
+    #Get the contents of the previous file to carry over any tasks that aren't complete
+    $catPreviousFile = (Get-Content -Path $previousFile -ErrorAction SilentlyContinue)
 
     # Template markdown definition
     $template = "
-[Previous]($(Resolve-Path -Path $previousFile -Relative)) | {{Next}}
+[Previous]($(Get-RelativePath -sourcePath $todaysPath -filePath $previousFile)) | {{Next}}
 
 # $(Get-Date)
 
-## Tasks"
-
-    # Let's carry forward the not completed tasks from yesterday
-    foreach ($line in $catPreviousFile) {
-        if ($line.startsWith("## Tasks")) {
-            $inSection = $true
-            Write-Host "Found Tasks"
-            continue
-        }
-        if ($inSection -and $line -match "^- \[ \] \w") {
-            $template += "`r`n" + $line 
-            Write-Host "Adding Line"
-        }
-        # If we get to the next section, stop parsing
-        if ($inSection -and $line.StartsWith("##")) {
-            Write-Host "All done"
-            break
-        }
-    }
-
-    $template += "
+## Tasks
+$(Get-CarryOverItems $catPreviousFile)
 - [ ] 
 
 ## Work Log
@@ -89,20 +102,19 @@ Example:
 - Tasks:
 - Notes:
 "
+    #Create new note file with template text
+    Set-Content -Path $todaysPath\$todaysFile -Value $template
 
-    if (-Not (Test-Path .\$todaysFile)) {
-        Set-Content -Path .\$todaysFile -Value $template
+    #Update the breadcrumb in the previous file
+    $catPreviousFile.replace("{{Next}}", "[Next]($(Get-RelativePath -sourcePath $previousPath -filePath "$todaysPath\$todaysFile"))") | Set-Content -Path $previousFile -Force
+
+    #Open file in VSCode
+    try {
+        Code $todaysPath\$todaysFile
     }
-    $todaysFileLoc = (Get-ChildItem -Path .\$todaysFile).Fullname
-
+    catch {
+        #SilentlyContinue on error
+    }
+    
     Pop-Location
-    Push-Location $previousPath
-
-    $catPreviousFile.replace("{{Next}}", "[Next]($(Resolve-Path -Path $todaysFileLoc -Relative))") | Set-Content -Path $previousFile -Force
-
-    Pop-Location
-
-    Code $todaysFileLoc
-
-    Set-Location $currentPwd
 }
