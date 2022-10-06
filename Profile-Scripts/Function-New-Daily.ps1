@@ -75,7 +75,10 @@ Example:
 
     $todaysFile = "$(Get-Date -f "yyyy-MM-dd").md"
 
-    if (Test-Path $todaysPath\$todaysFile) { return "Today's Note already exists" }
+    if (Test-Path $todaysPath\$todaysFile) { 
+        code $todaysPath\$todaysFile
+        return "Today's Note already exists" 
+    }
 
     # Set the previous file to last/oldest [-1] returned file from $previousPath
     $previousFile = "$(((Get-ChildItem $previousPath\*.md -Exclude _template.md | Sort-Object CreationTime)[-1]).FullName)"
