@@ -26,7 +26,7 @@ Function New-DailyNote (
                 $inSection = $true
                 continue
             }
-            if ($inSection -and $line -match "^- \[ \] \w") {
+            if ($inSection -and $line -match "- \[ \] \w") {
                 $returnResults += "`r`n" + $line 
             }
             # If we get to the next section, stop parsing
