@@ -17,15 +17,16 @@ Function New-DailyNote (
     $notesDirectory = "$([Environment]::GetFolderPath("MyDocuments"))\Notebook\Daily Notes"
 ) {
     ## Helper functions to simplify the text manipulation below
-    function Get-CarryOverItems($previousNote) {
+        
+    function Get-WorkItems($noteText) {
         # Let's carry forward the not completed tasks from yesterday
         $returnResults = ""
-        foreach ($line in $previousNote) {
+        foreach ($line in $noteText) {
             if ($line.startsWith("## Tasks")) {
                 $inSection = $true
                 continue
             }
-            if ($inSection -and $line -match "^- \[ \] \w") {
+            if ($inSection -and $line -match "- \[ \] \w") {
                 $returnResults += "`r`n" + $line 
             }
             # If we get to the next section, stop parsing
@@ -93,13 +94,13 @@ Example:
 # $(Get-Date)
 
 ## Tasks
-$(Get-CarryOverItems $catPreviousFile)
+$(Get-WorkItems $catPreviousFile)
 - [ ] 
 
 ## Work Log
 - 
 
-## 0000 Meeting
+## 000 Meeting - 
 - Tags: 
 - Attendees: 
 - Tasks:
@@ -120,4 +121,75 @@ $(Get-CarryOverItems $catPreviousFile)
     }
     
     Pop-Location
+}
+
+# TODO: This actually could fail if you had no space after Work Items?  Testing needed
+function Add-WorkItem(
+    [string]$text,
+    [string]$notePath = "$([Environment]::GetFolderPath("MyDocuments"))\Notebook\Daily Notes\$(Get-Date -f "yyyy\\MM")\$(Get-Date -f "yyyy-MM-dd").md"
+) {
+    if (-not ($notepath)) {
+        throw "Path to working note is invalid ($($notepath))";
+    }
+    $content = Get-Content $notepath
+    $newcontent = ""
+    $insertedItem, $skipNextBlankLink = $false
+    foreach ($line in $content) {
+        if ($line.startsWith("## Tasks")) {
+            $inSection = $true
+            $skipNextBlankLink = $true
+        }
+        if ($skipNextBlankLink -and $line.length -eq 0) {
+            $newcontent += "$line`n"
+            $skipNextBlankLink = $false
+            continue
+        }
+        if ($inSection -and ($line -match "(\-\s\[\s\]\s+$)+")) {
+            $insertedItem = $true
+            $newcontent += "- [ ] $text`n"
+        }
+        if ($inSection -and (-not ($insertedItem)) -and (($line.length -eq 0) -or ($line.startsWith("## Work Log")))) {
+            $insertedItem = $true
+            $newcontent += "- [ ] $text`n"
+        }
+        $newcontent += "$line`n"
+    }
+    try {
+        Set-Content -Path $notepath -Value $newcontent -Force
+        Write-Output "Added task to note."
+    }
+    catch { Throw $_ }
+}
+
+# TODO: Do I want to do this?
+function Close-WorkItem(
+    [string]$notePath = "$([Environment]::GetFolderPath("MyDocuments"))\Notebook\Daily Notes\$(Get-Date -f "yyyy\\MM")\$(Get-Date -f "yyyy-MM-dd").md"
+) {
+    if (-not ($notepath)) {
+        throw "Path to working note is invalid ($($notepath))";
+    }
+    $content = Get-Content $notepath
+    $newcontent = ""
+    $insertedItem, $skipNextBlankLink = $false
+    foreach ($line in $content) {
+        if ($line.startsWith("## Tasks")) {
+            $inSection = $true
+            $skipNextBlankLink = $true
+        }
+        if ($skipNextBlankLink -and $line.length -eq 0) {
+            $newcontent += "$line`n"
+            $skipNextBlankLink = $false
+            continue
+        }
+        if ($inSection -and ($line -match "(\-\s\[\s\]\s+$)+")) {
+            $insertedItem = $true
+            $newcontent += "- [ ] $text`n"
+        }
+        if ($inSection -and (-not ($insertedItem)) -and (($line.length -eq 0) -or ($line.startsWith("## Work Log")))) {
+            $insertedItem = $true
+            $newcontent += "- [ ] $text`n"
+        }
+        $newcontent += "$line`n"
+    }
+
 }
