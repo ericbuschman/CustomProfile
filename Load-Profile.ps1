@@ -21,28 +21,28 @@ Set-Location "$PSScriptRoot"
 [hashtable]$monitorScriptStartupTime = @{}
 
 #Store title of powershell window
-$title=$host.ui.rawui.WindowTitle
+$title = $host.ui.rawui.WindowTitle
 
 #Create a timer to monitor script load time
 $timer = [system.diagnostics.stopwatch]::StartNew()
 
 # Loop through all startup scripts filter by *.ps1, order of folders matter.
-Get-ChildItem (".\Utilities",".\Profile-Scripts",".\Configure-Aliases") -Recurse -Include "*.ps1" | ForEach-Object { 
-  # Start the timer
-  $timer.Restart(); 
+Get-ChildItem (".\Utilities", ".\Profile-Scripts", ".\Configure-Aliases") -Recurse -Include "*.ps1" | ForEach-Object { 
+     # Start the timer
+     $timer.Restart(); 
 
-  # Update the window title to currently loading script
-  $host.ui.rawui.WindowTitle="Loading: $($_.FullName)"; 
+     # Update the window title to currently loading script
+     $host.ui.rawui.WindowTitle = "Loading: $($_.FullName)"; 
 
-  # Load script
-  . $_.FullName; 
+     # Load script
+     . $_.FullName; 
 
-  # Add time to timer
-  $monitorScriptStartupTime.Add("$($_.Name)", "$($timer.ElapsedMilliseconds)"); 
+     # Add time to timer
+     $monitorScriptStartupTime.Add("$($_.Name)", "$($timer.ElapsedMilliseconds)"); 
 }
 
 # Reset window title to original
-$host.ui.rawui.WindowTitle=$title
+$host.ui.rawui.WindowTitle = $title
 
 # Clear out timer and let user know how to check all script load times
 $timer = $null;
