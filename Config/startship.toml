@@ -1,3 +1,13 @@
+
+[time]
+disabled = false
+format = '[\[ $time \]]($style) '
+time_format = '%F %T'
+
+[cmd_duration]
+min_time = 500
+format = 'took [$duration](bold yellow)'
+
 [aws]
 symbol = "  "
 
