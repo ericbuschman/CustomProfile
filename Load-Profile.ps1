@@ -46,6 +46,7 @@ $host.ui.rawui.WindowTitle = $title
 
 # Check if Starship is installed
 if (Get-Command starship -ErrorAction SilentlyContinue) {
+     Write-Host "Starship is installed, loading configuration"
      $ENV:STARSHIP_CONFIG = "$PSScriptRoot\Config\startship.toml"
      function Invoke-Starship-TransientFunction {
           &starship module character
