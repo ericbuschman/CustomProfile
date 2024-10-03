@@ -44,6 +44,18 @@ Get-ChildItem (".\Utilities", ".\Profile-Scripts", ".\Configure-Aliases") -Recur
 # Reset window title to original
 $host.ui.rawui.WindowTitle = $title
 
+# Check if Starship is installed
+if (Get-Command starship -ErrorAction SilentlyContinue) {
+     $ENV:STARSHIP_CONFIG = "$PSScriptRoot\CustomProfile\Config\startship.toml"
+     function Invoke-Starship-TransientFunction {
+          &starship module character
+     }
+     
+     Invoke-Expression (&starship init powershell)
+     
+     Enable-TransientPrompt
+}
+
 # Clear out timer and let user know how to check all script load times
 $timer = $null;
 Write-Host 'To find out individual script load time: $monitorScriptStartupTime | FT -Auto'
