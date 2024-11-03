@@ -57,6 +57,14 @@ if (Get-Command starship -ErrorAction SilentlyContinue) {
      Enable-TransientPrompt
 }
 
+if (Get-Command carapace -ErrorAction SilentlyContinue) {
+     # ~/.config/powershell/Microsoft.PowerShell_profile.ps1
+     $env:CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense' # optional
+     Set-PSReadLineOption -Colors @{ "Selection" = "`e[7m" }
+     Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+     carapace _carapace | Out-String | Invoke-Expression
+}
+
 # Clear out timer and let user know how to check all script load times
 $timer = $null;
 Write-Host 'To find out individual script load time: $monitorScriptStartupTime | FT -Auto'
