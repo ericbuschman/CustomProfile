@@ -55,6 +55,7 @@ if (Get-Command starship -ErrorAction SilentlyContinue) {
 
 if (Get-Command carapace -ErrorAction SilentlyContinue) {
      # ~/.config/powershell/Microsoft.PowerShell_profile.ps1
+     Write-Host "Carapace is installed, loading configuration"
      $env:CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense' # optional
      Set-PSReadLineOption -Colors @{ "Selection" = "`e[7m" }
      Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
