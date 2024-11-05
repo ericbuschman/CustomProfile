@@ -10,10 +10,6 @@
      https://github.com/ericbuschman/CustomProfile
 #>
 
-
-#Change directory to the script folder
-Set-Location "$PSScriptRoot"
-
 #Set TLS 1.2
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
 
@@ -27,7 +23,7 @@ $title = $host.ui.rawui.WindowTitle
 $timer = [system.diagnostics.stopwatch]::StartNew()
 
 # Loop through all startup scripts filter by *.ps1, order of folders matter.
-Get-ChildItem (".\Utilities", ".\Profile-Scripts", ".\Configure-Aliases") -Recurse -Include "*.ps1" | ForEach-Object { 
+Get-ChildItem ("$PSScriptRoot\Utilities", "$PSScriptRoot\Profile-Scripts", "$PSScriptRoot\Configure-Aliases") -Recurse -Include "*.ps1" | ForEach-Object { 
      # Start the timer
      $timer.Restart(); 
 
@@ -68,6 +64,3 @@ if (Get-Command carapace -ErrorAction SilentlyContinue) {
 # Clear out timer and let user know how to check all script load times
 $timer = $null;
 Write-Host 'To find out individual script load time: $monitorScriptStartupTime | FT -Auto'
-
-# Preference, I like to have the window start in the powershell profile folder
-Set-Location (Split-Path $profile)
