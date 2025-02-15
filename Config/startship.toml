@@ -8,6 +8,9 @@ $time\
 $cmd_duration
 $character"""
 
+# Timeout for commands executed by starship (in milliseconds).
+command_timeout = 1500
+
 [os]
 format = '[$symbol]($style)'
 style = "bold blue"
